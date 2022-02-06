@@ -4,21 +4,31 @@ const app: Application = express();
 const port = 3000;
 import session from "express-session";
 import path from "path";
-// Body parsing Middleware
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+interface UserSession {
+  id: string;
+  email?: string;
+  name?: string;
+  role?: string;
+}
+
 declare module "express-session" {
   interface Session {
-    user: object | string;
+    user: UserSession;
   }
 }
 app.use(
   session({
     secret: "secret",
-    resave: false,
-    saveUninitialized: false,
-    cookie: { secure: process.env.NODE_ENV === "production" },
+    resave: true,
+    saveUninitialized: true,
+    cookie: {
+      secure: process.env.NODE_ENV === "production",
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+    },
   })
 );
 app.set("views", path.join(__dirname, "/views"));

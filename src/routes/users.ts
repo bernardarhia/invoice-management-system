@@ -1,20 +1,9 @@
-import { Request, Router, Response } from "express";
-import { Users } from "../models/Users";
+import { Router } from "express";
+import UserController from "../controllers/UserController";
+import { requireLogin } from "../middlewares/requireLogin";
 const router = Router();
 
-router.get("/", async (req: Request, res: Response) => {
-  try {
-    const users = await Users.create({
-      name: "John Doe",
-      email: "",
-      password: "12345",
-      role: "admin",
-    });
-    req.session.user = users;
-    return res.send(users);
-  } catch (error) {
-    console.log(error);
-    return;
-  }
-});
+router.post("/login", UserController.login);
+router.post("/register", UserController.createAccount);
+router.get("/:id", requireLogin, UserController.userProfile);
 export default router;

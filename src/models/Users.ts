@@ -19,7 +19,10 @@ import { v4 as uuidv4 } from "uuid";
   modelName: "Users",
 })
 export class Users extends Model {
-  public validPassword!: (password: string) => Promise<boolean>;
+  public validatePassword!: (
+    password: string,
+    hashPassword: string
+  ) => Promise<boolean>;
 
   @Column({
     type: DataType.UUID,
@@ -76,8 +79,28 @@ export class Users extends Model {
     });
     while (isExists) instance.id = uuidv4();
   }
+  static async userExists(email: string): Promise<boolean> {
+    const user = await Users.findOne({
+      where: {
+        email,
+      },
+    });
+    return !!user;
+  }
+
+  static async validUser(email: string, password: string) {
+    const user = await Users.findOne({
+      where: {
+        email,
+      },
+    });
+    if (!user) return false;
+    const isValid = await user.validatePassword(password, user.password);
+    if (!isValid) return false;
+    return user;
+  }
 }
 
-Users.prototype.validPassword = async function (password) {
-  return await bcrypt.compare(password, this.password!);
+Users.prototype.validatePassword = async function (password, hashPassword) {
+  return await bcrypt.compare(password, hashPassword);
 };
