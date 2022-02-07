@@ -34,10 +34,15 @@ app.use(
 app.set("views", path.join(__dirname, "/views"));
 app.set("view engine", "ejs");
 
-// user route
-import router from "./routes/users";
-app.use("/api/users", router);
+// API ROUTES
+import userRouter from "./routes/users";
+app.use("/api/users", userRouter);
 
+// API ROUTES
+import invoiceRouter from "./routes/invoice";
+app.use("/api/invoice", invoiceRouter);
+
+// PUBLIC ROUTES
 import publicRoute from "./publicRoute";
 app.use(publicRoute);
 

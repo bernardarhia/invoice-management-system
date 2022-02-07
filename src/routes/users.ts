@@ -1,9 +1,9 @@
 import { Router } from "express";
 import UserController from "../controllers/UserController";
 import { requireLogin } from "../middlewares/requireLogin";
-const router = Router();
+const userRouter = Router();
 
-router.post("/login", UserController.login);
-router.post("/register", UserController.createAccount);
-router.get("/:id", requireLogin, UserController.userProfile);
-export default router;
+userRouter.post("/login", UserController.login);
+userRouter.post("/register", UserController.createAccount);
+userRouter.get("/:id", requireLogin, UserController.userProfile);
+export default userRouter;

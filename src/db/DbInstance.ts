@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize-typescript";
 import { Users } from "../models/Users";
+import { Invoice } from "../models/Invoice";
 import { sequelizeConfig } from "../config/sequelize";
 const sequelize = new Sequelize({
   database: sequelizeConfig.dbName,
@@ -9,6 +10,6 @@ const sequelize = new Sequelize({
   host: sequelizeConfig.sequelizeInfo.host,
 });
 
-sequelize.addModels([Users]);
+sequelize.addModels([Users, Invoice]);
 
 export default sequelize;
