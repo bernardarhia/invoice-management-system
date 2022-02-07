@@ -47,4 +47,16 @@ export class InvoiceController {
       return res.status(500).send(error);
     }
   }
+  static async getInvoice(req: Request, res: Response) {
+    const { id } = req.params;
+    try {
+      const invoice = await Invoice.findOne({
+        where: { id },
+      });
+      if (invoice) return res.status(200).send(invoice);
+      return res.status(404).send("Invoice not found");
+    } catch (error) {
+      return res.status(500).send(error);
+    }
+  }
 }

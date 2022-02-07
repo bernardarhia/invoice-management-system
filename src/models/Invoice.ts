@@ -24,13 +24,7 @@ interface InvoiceAttributes {
   start_date: Date;
   end_date: Date;
   invoice_number: number;
-  invoice_data: [
-    {
-      item: string;
-      quantity: number;
-      price: number;
-    }
-  ];
+  invoice_data: string;
   description: string;
   status: status;
 }
@@ -52,7 +46,7 @@ export class Invoice extends Model<
   InvoiceCreationAttributes
 > {
   @Column({
-    type: DataType.STRING(30),
+    type: DataType.STRING,
     primaryKey: true,
     autoIncrement: false,
     allowNull: false,
@@ -61,13 +55,13 @@ export class Invoice extends Model<
   id!: string;
 
   @Column({
-    type: DataType.STRING(255),
+    type: DataType.STRING,
     allowNull: false,
   })
   title!: string;
 
   @Column({
-    type: DataType.STRING(30),
+    type: DataType.STRING,
     allowNull: false,
   })
   created_by!: string;
@@ -105,8 +99,15 @@ export class Invoice extends Model<
   @Column({
     type: DataType.TEXT,
     allowNull: false,
+    get: function () {
+      return JSON.parse(this.getDataValue("invoice_data"));
+    },
+    set: function (val) {
+      return this.setDataValue("invoice_data", JSON.stringify(val));
+    },
   })
-  invoice_data!: Array<object>;
+  invoice_data!: string;
+
   @Column({
     type: DataType.TEXT,
     allowNull: false,
